@@ -19,12 +19,19 @@ const { Title, Paragraph } = Typography;
 
 type SignupProps = UserAuthenticationReducerState;
 
+interface SignupFormData extends SignupRequest {
+  confirmPassword: string;
+}
+
 const Signup: React.FC<SignupProps> = ({ tokens }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const onFinish = (values: SignupRequest) => {
-    dispatch(signup(values));
+  const onFinish = (values: SignupFormData) => {
+    // confirmPassword is checked in the form but should not be sent in the request
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirmPassword, ...request } = values;
+    dispatch(signup(request));
   };
 
   if (getPrivilegeLevel(tokens) !== PrivilegeLevel.NONE) {
@@ -59,14 +66,6 @@ const Signup: React.FC<SignupProps> = ({ tokens }) => {
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, message: 'Required' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Username"
-            name="username"
             rules={[{ required: true, message: 'Required' }]}
           >
             <Input />

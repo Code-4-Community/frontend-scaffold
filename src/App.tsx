@@ -67,6 +67,11 @@ const App: React.FC = () => {
                           exact
                           component={Settings}
                         />
+                        <Route
+                          path={Routes.VERIFY_EMAIL}
+                          exact
+                          component={VerifyEmail}
+                        />
                         <Route path="*" exact component={NotFound} />
                       </Switch>
                     );
