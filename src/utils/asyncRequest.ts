@@ -39,6 +39,7 @@ interface WithId {
 
 export type IdentifiedAsyncRequest<R, E> = AsyncRequest<R, E> & WithId;
 
+// eslint-disable-next-line
 export function asyncRequestIdentifiedBy<R, E = void>(id: string) {
   const identify = (
     request: AsyncRequest<R, E>,
@@ -215,13 +216,14 @@ export function genericAsyncActions<R, E>(): {
   };
 }
 
-export function generateAsyncRequestReducer<S, R, E>(key: string) {
-  const genericReducer: Reducer<
-    AsyncRequest<R, E>,
-    AsyncRequestAction<any, any>
-  > = (
+export function generateAsyncRequestReducer<R, E>(
+  key: string,
+  // any is required here as this reducer takes any AsyncRequestAction, and identifies each by key
+  // eslint-disable-next-line
+): Reducer<AsyncRequest<R, E>, AsyncRequestAction<any, any>> {
+  return (
     state: AsyncRequest<R, E> = AsyncRequestNotStarted<R, E>(),
-    action: AsyncRequestAction<any, any>,
+    action: AsyncRequestAction<any, any>, // eslint-disable-line
   ) => {
     switch (action.type) {
       case ASYNC_REQUEST_LOADING_ACTION:
@@ -242,5 +244,4 @@ export function generateAsyncRequestReducer<S, R, E>(key: string) {
     }
     return state;
   };
-  return genericReducer;
 }

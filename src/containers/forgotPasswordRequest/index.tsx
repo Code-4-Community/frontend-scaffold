@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Button, Form, Input, Typography } from 'antd';
-import authClient from '../../auth/authClient';
+import authClient from '../../api/authClient';
 import { ForgotPasswordRequest } from '../../auth/ducks/types';
 
 const { Title } = Typography;
@@ -13,7 +13,7 @@ const ForgotPassword: React.FC = () => {
       .then(() => {
         alert('Successfully sent forgot password request!');
       })
-      .catch((err) => {
+      .catch(() => {
         alert('Forgot password request unsuccessful!');
       });
   };

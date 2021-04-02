@@ -8,15 +8,15 @@ import {
   AsyncRequestNotStarted,
   generateAsyncRequestReducer,
 } from '../../utils/asyncRequest';
+import { ApiError } from '../../utils/error';
 
 export const initialUserState: UserAuthenticationReducerState = {
-  tokens: AsyncRequestNotStarted<TokenPayload, any>(),
+  tokens: AsyncRequestNotStarted<TokenPayload, ApiError>(),
 };
 
 const userAuthenticationRequestReducer = generateAsyncRequestReducer<
-  UserAuthenticationReducerState,
   TokenPayload,
-  void
+  ApiError
 >(authenticateUser.key);
 
 const reducers = (

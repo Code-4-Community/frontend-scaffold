@@ -1,11 +1,12 @@
 import { ThunkAction } from 'redux-thunk';
-import { AuthClient } from '../authClient';
+import { AuthClient } from '../../api/authClient';
 import { AsyncRequest } from '../../utils/asyncRequest';
 import { UserAuthenticationActions } from './actions';
 import { C4CState } from '../../store';
+import { ApiError } from '../../utils/error';
 
 export interface UserAuthenticationReducerState {
-  readonly tokens: AsyncRequest<TokenPayload, any>;
+  readonly tokens: AsyncRequest<TokenPayload, ApiError>;
 }
 
 export interface UserAuthenticationExtraArgs {

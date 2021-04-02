@@ -109,7 +109,7 @@ const Signup: React.FC<SignupProps> = ({ tokens }) => {
           </Paragraph>
 
           {tokens.kind === AsyncRequestKinds.Failed && (
-            <Paragraph>{tokens.error}</Paragraph>
+            <Paragraph>{tokens.error.message}</Paragraph>
           )}
           <Form.Item>
             <Button type="primary" htmlType="submit">

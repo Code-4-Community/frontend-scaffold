@@ -8,6 +8,7 @@ import { authenticateUser, logoutUser } from './actions';
 import { C4CState, LOCALSTORAGE_STATE_KEY } from '../../store';
 import { asyncRequestIsComplete } from '../../utils/asyncRequest';
 import AppAxiosInstance from '../axios';
+import { ApiError } from '../../utils/error';
 
 export const login = (
   loginRequest: LoginRequest,
@@ -21,8 +22,8 @@ export const login = (
           response.accessToken;
         dispatch(authenticateUser.loaded(response));
       })
-      .catch((error) => {
-        dispatch(authenticateUser.failed(error.response.data));
+      .catch((error: ApiError) => {
+        dispatch(authenticateUser.failed(error));
       });
   };
 };
@@ -34,7 +35,7 @@ export const signup = (
     dispatch(authenticateUser.loading());
     return authClient
       .signup(signupRequest)
-      .then((response) => {
+      .then((response: TokenPayload) => {
         AppAxiosInstance.defaults.headers['X-Access-Token'] =
           response.accessToken;
         dispatch(authenticateUser.loaded(response));

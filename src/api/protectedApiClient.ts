@@ -1,10 +1,8 @@
 import AppAxiosInstance from '../auth/axios';
+import { ChangePasswordRequest } from '../containers/settings';
 
 export interface ProtectedApiClient {
-  readonly changePassword: (request: {
-    currentPassword: string;
-    newPassword: string;
-  }) => Promise<void>;
+  readonly changePassword: (request: ChangePasswordRequest) => Promise<void>;
   readonly deleteUser: (request: { password: string }) => Promise<void>;
 }
 
@@ -13,10 +11,7 @@ export enum ProtectedApiClientRoutes {
   DELETE_USER = '/api/v1/protected/user/',
 }
 
-const changePassword = (request: {
-  currentPassword: string;
-  newPassword: string;
-}): Promise<void> => {
+const changePassword = (request: ChangePasswordRequest): Promise<void> => {
   return AppAxiosInstance.post(
     ProtectedApiClientRoutes.CHANGE_PASSWORD,
     request,

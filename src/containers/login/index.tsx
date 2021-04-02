@@ -72,7 +72,7 @@ const Login: React.FC<LoginProps> = ({ tokens }) => {
             to reset it.
           </Paragraph>
           {tokens.kind === AsyncRequestKinds.Failed && (
-            <Paragraph>{tokens.error}</Paragraph>
+            <Paragraph>{tokens.error.message}</Paragraph>
           )}
           <Form.Item>
             <Button type="primary" htmlType="submit">

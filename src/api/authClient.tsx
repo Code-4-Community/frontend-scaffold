@@ -1,12 +1,13 @@
 import {
-  TokenPayload,
-  LoginRequest,
-  SignupRequest,
-  RefreshTokenResponse,
   ForgotPasswordRequest,
   ForgotPasswordResetRequest,
-} from './ducks/types';
+  LoginRequest,
+  RefreshTokenResponse,
+  SignupRequest,
+  TokenPayload,
+} from '../auth/ducks/types';
 import axios, { AxiosInstance } from 'axios';
+import { axiosErrorToApiError } from '../utils/error';
 
 export interface AuthClient {
   login: (user: LoginRequest) => Promise<TokenPayload>;
@@ -38,9 +39,9 @@ const AuthAxiosInstance: AxiosInstance = axios.create({
 const login: (user: LoginRequest) => Promise<TokenPayload> = (
   user: LoginRequest,
 ) =>
-  AuthAxiosInstance.post(API_ROUTE.LOGIN, user).then(
-    (response) => response.data,
-  );
+  AuthAxiosInstance.post(API_ROUTE.LOGIN, user)
+    .then((response) => response.data)
+    .catch(axiosErrorToApiError);
 
 const signup: (user: SignupRequest) => Promise<TokenPayload> = (
   user: SignupRequest,

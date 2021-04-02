@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useParams } from 'react-router-dom';
 import { Button, Form, Input, Typography } from 'antd';
-import authClient from '../../auth/authClient';
+import authClient from '../../api/authClient';
 
 const { Title } = Typography;
 
@@ -25,7 +25,7 @@ const ForgotPasswordReset: React.FC = () => {
         .then(() => {
           alert('Successfully reset password!');
         })
-        .catch((err) => {
+        .catch(() => {
           alert('Was not able to reset password.');
         });
     }

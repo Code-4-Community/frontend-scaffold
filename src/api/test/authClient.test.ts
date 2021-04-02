@@ -1,4 +1,4 @@
-import { RefreshTokenResponse, TokenPayload } from '../ducks/types';
+import { RefreshTokenResponse, TokenPayload } from '../../auth/ducks/types';
 import AuthClient, { API_ROUTE } from '../authClient';
 import nock from 'nock';
 

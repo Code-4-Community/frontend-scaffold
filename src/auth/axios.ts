@@ -3,7 +3,7 @@ import store, { LOCALSTORAGE_STATE_KEY } from '../store';
 import { asyncRequestIsComplete } from '../utils/asyncRequest';
 import { UserAuthenticationReducerState } from './ducks/types';
 import { isTokenValid } from './ducks/selectors';
-import AuthClient from './authClient';
+import AuthClient from '../api/authClient';
 
 const AppAxiosInstance: AxiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_DOMAIN,
@@ -13,7 +13,7 @@ const AppAxiosInstance: AxiosInstance = axios.create({
   },
 });
 
-const INVALID_ACCESS_TOKEN: string = 'Given access token is expired or invalid';
+const INVALID_ACCESS_TOKEN = 'Given access token is expired or invalid';
 
 const responseErrorInterceptor = (error: AxiosError) => {
   const originalRequest = {
@@ -29,6 +29,7 @@ const responseErrorInterceptor = (error: AxiosError) => {
     error?.response?.status === 401 &&
     error?.response?.data === INVALID_ACCESS_TOKEN &&
     isTokenValid(tokens.result.refreshToken) &&
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     !(error.config as any)?._retry
   ) {
     return AuthClient.refresh(tokens.result.refreshToken).then(

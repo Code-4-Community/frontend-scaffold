@@ -13,8 +13,8 @@ export const LinkButton: React.FC<LinkButtonProps> = ({ to, ...rest }) => {
   return (
     <Button
       {...rest}
-      onClick={() => {
-        history.push(to);
+        onClick={() => {
+          history.push(to);
       }}
     />
   );

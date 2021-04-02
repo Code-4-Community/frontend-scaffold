@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Typography } from 'antd';
 import { ContentContainer } from '../../components';
 import { Routes } from '../../App';
-import authClient from '../../auth/authClient';
+import authClient from '../../api/authClient';
 import {
   AsyncRequest,
   AsyncRequestCompleted,

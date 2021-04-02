@@ -1,7 +1,8 @@
 import { genericAsyncActions } from '../../utils/asyncRequest';
 import { TokenPayload } from './types';
+import { ApiError } from '../../utils/error';
 
-export const authenticateUser = genericAsyncActions<TokenPayload, any>();
+export const authenticateUser = genericAsyncActions<TokenPayload, ApiError>();
 
 export const logoutUser = genericAsyncActions<void, void>();
 

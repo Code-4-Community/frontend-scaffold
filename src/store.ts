@@ -3,7 +3,7 @@ import {
   UserAuthenticationReducerState,
 } from './auth/ducks/types';
 import { UserAuthenticationActions } from './auth/ducks/actions';
-import authClient from './auth/authClient';
+import authClient from './api/authClient';
 import {
   applyMiddleware,
   combineReducers,
@@ -14,9 +14,9 @@ import {
 import userReducer, { initialUserState } from './auth/ducks/reducers';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
-import throttle from 'lodash/throttle';
 import AppAxiosInstance from './auth/axios';
 import { asyncRequestIsComplete } from './utils/asyncRequest';
+import { throttle } from 'lodash';
 
 export interface C4CState {
   authenticationState: UserAuthenticationReducerState;
@@ -39,7 +39,7 @@ export const initialStoreState: C4CState = {
   authenticationState: initialUserState,
 };
 
-export const LOCALSTORAGE_STATE_KEY: string = 'state';
+export const LOCALSTORAGE_STATE_KEY = 'state';
 
 const loadStateFromLocalStorage = (): C4CState | undefined => {
   try {
@@ -64,8 +64,10 @@ const thunkExtraArgs: ThunkExtraArgs = {
   authClient,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-  ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+  ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
       trace: true,
       traceLimit: 25,
     })
@@ -80,8 +82,8 @@ const enhancer = composeEnhancers(
 const store: Store<C4CState, C4CAction> = createStore<
   C4CState,
   C4CAction,
-  {},
-  {}
+  Record<string, never>,
+  Record<string, never>
 >(reducers, preloadedState || initialStoreState, enhancer);
 
 store.subscribe(
@@ -93,7 +95,7 @@ store.subscribe(
     } catch {
       // ignore write errors
     }
-  }, 10000),
+  }, 1000),
 );
 
 export default store;
