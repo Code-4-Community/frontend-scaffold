@@ -1,18 +1,20 @@
 import {
-  AsyncRequestLoading,
-  AsyncRequestNotStarted,
   ASYNC_REQUEST_FAILED_ACTION,
-  generateAsyncRequestReducer,
-  genericAsyncActions,
   ASYNC_REQUEST_LOADED_ACTION,
   ASYNC_REQUEST_LOADING_ACTION,
-  AsyncRequestFailed,
-  AsyncRequestCompleted,
-  rehydrateAsyncRequest,
   ASYNC_REQUEST_NOT_STARTED_ACTION,
+  AsyncRequest,
+  AsyncRequestCompleted,
+  AsyncRequestFailed,
+  asyncRequestIsComplete, asyncRequestIsFailed, asyncRequestIsLoading,
+  asyncRequestIsNotStarted,
+  AsyncRequestLoading,
+  AsyncRequestNotStarted,
+  generateAsyncRequestReducer,
+  genericAsyncActions,
+  rehydrateAsyncRequest,
 } from '../asyncRequest';
 import {
-  PrivilegeLevel,
   TokenPayload,
   UserAuthenticationReducerState,
 } from '../../auth/ducks/types';
@@ -130,5 +132,69 @@ describe('asyncRequest ', () => {
 
       expect(rehydrateAsyncRequest(loadingRequest)).toEqual(notStartedRequest);
     });
+  });
+
+  describe('asyncRequestIsX utilities', () => {
+    const notStartedRequest = AsyncRequestNotStarted<string, string>();
+    const loadingRequest = AsyncRequestLoading<string, string>();
+    const completedRequest = AsyncRequestCompleted<string, string>('result!');
+    const failedRequest = AsyncRequestFailed<string, string>('error!');
+
+    const asyncRequests: AsyncRequest<string, string>[] = [
+      notStartedRequest,
+      loadingRequest,
+      completedRequest,
+      failedRequest,
+    ];
+
+    it('asyncRequestIsNotStarted identifies NotStarted asyncRequests', () => {
+      asyncRequests.map(
+        (asyncRequest: AsyncRequest<string, string>, index: number) => {
+          if (index === 0) {
+            expect(asyncRequestIsNotStarted(asyncRequest)).toEqual(true);
+          } else {
+            expect(asyncRequestIsNotStarted(asyncRequest)).toEqual(false);
+          }
+        },
+      );
+    });
+
+    it('asyncRequestIsLoading identifies Loading asyncRequests', () => {
+      asyncRequests.map(
+        (asyncRequest: AsyncRequest<string, string>, index: number) => {
+          if (index === 1) {
+            expect(asyncRequestIsLoading(asyncRequest)).toEqual(true);
+          } else {
+            expect(asyncRequestIsLoading(asyncRequest)).toEqual(false);
+          }
+        },
+      );
+    });
+
+    it('asyncRequestIsComplete identifies Complete asyncRequests', () => {
+      asyncRequests.map(
+        (asyncRequest: AsyncRequest<string, string>, index: number) => {
+          if (index === 2) {
+            expect(asyncRequestIsComplete(asyncRequest)).toEqual(true);
+          } else {
+            expect(asyncRequestIsComplete(asyncRequest)).toEqual(false);
+          }
+        },
+      );
+    });
+
+
+    it('asyncRequestIsFailed identifies Failed asyncRequests', () => {
+      asyncRequests.map(
+        (asyncRequest: AsyncRequest<string, string>, index: number) => {
+          if (index === 3) {
+            expect(asyncRequestIsFailed(asyncRequest)).toEqual(true);
+          } else {
+            expect(asyncRequestIsFailed(asyncRequest)).toEqual(false);
+          }
+        },
+      );
+    });
+
   });
 });
