@@ -17,7 +17,9 @@ import { Routes } from '../../App';
 
 const { Title, Paragraph } = Typography;
 
-type SignupProps = UserAuthenticationReducerState;
+interface SignupProps {
+  readonly tokens: UserAuthenticationReducerState['tokens']
+}
 
 interface SignupFormData extends SignupRequest {
   confirmPassword: string;

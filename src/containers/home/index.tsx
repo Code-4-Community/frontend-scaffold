@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Typography } from 'antd';
 import { ContentContainer } from '../../components';
+import { PrivilegeLevel } from '../../auth/ducks/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { C4CState } from '../../store';
+import { getFullName, getPrivilegeLevel } from '../../auth/ducks/selectors';
+import { getUserData } from '../../auth/ducks/thunks';
 
 const { Title } = Typography;
 
 const Home: React.FC = () => {
+  const dispatch = useDispatch();
+
+  const privilegeLevel: PrivilegeLevel = useSelector((state: C4CState) =>
+    getPrivilegeLevel(state.authenticationState.tokens),
+  );
+
+  useEffect(() => {
+    dispatch(getUserData());
+  }, [dispatch, privilegeLevel])
+  const name: string | undefined = useSelector((state: C4CState) =>
+    getFullName(state.authenticationState.userData),
+  );
   return (
     <>
       <Helmet>
@@ -16,10 +33,8 @@ const Home: React.FC = () => {
         />
       </Helmet>
       <ContentContainer>
-        <Title>Code4Community Frontend Scaffold</Title>
-        <Title level={3}>
-          Built with React.js, Typescript, Redux, and AntD components.
-        </Title>
+        <Title>Hello, {name}</Title>
+        <Title level={3}>Your privilege level is: {privilegeLevel}</Title>
       </ContentContainer>
     </>
   );

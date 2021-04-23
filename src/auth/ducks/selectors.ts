@@ -30,3 +30,9 @@ export const isTokenValid = (token: string): boolean => {
   const payload = JSON.parse(atob(token.split('.')[1]));
   return payload && Math.round(Date.now() / 1000) < payload.exp;
 };
+
+export const getFullName = (userData: UserAuthenticationReducerState['userData']): string | undefined => {
+  if (asyncRequestIsComplete(userData)) {
+    return `${userData.result.firstName} ${userData.result.lastName}`
+  }
+}

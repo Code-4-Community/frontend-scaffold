@@ -7,11 +7,16 @@ import {
   ASYNC_REQUEST_NOT_STARTED_ACTION,
   generateAsyncRequestReducer,
 } from '../../utils/asyncRequest';
-import { authenticateUser } from './actions';
-import { TokenPayload, UserAuthenticationReducerState } from './types';
+import { authenticateUser, userData } from './actions';
+import {
+  TokenPayload,
+  UserAuthenticationReducerState,
+  UserData,
+} from './types';
 
 export const initialUserState: UserAuthenticationReducerState = {
   tokens: AsyncRequestNotStarted<TokenPayload, any>(),
+  userData: AsyncRequestNotStarted<UserData, string>(),
 };
 
 const userAuthenticationRequestReducer = generateAsyncRequestReducer<
@@ -19,6 +24,12 @@ const userAuthenticationRequestReducer = generateAsyncRequestReducer<
   TokenPayload,
   void
 >(authenticateUser.key);
+
+const userDataRequestReducer = generateAsyncRequestReducer<
+  UserAuthenticationReducerState,
+  UserData,
+  string
+>(userData.key);
 
 const reducers = (
   state: UserAuthenticationReducerState = initialUserState,
@@ -32,6 +43,7 @@ const reducers = (
       return {
         ...state,
         tokens: userAuthenticationRequestReducer(state.tokens, action),
+        userData: userDataRequestReducer(state.userData, action),
       };
     default:
       return state;
