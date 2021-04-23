@@ -17,6 +17,7 @@ import thunk from 'redux-thunk';
 import throttle from 'lodash/throttle';
 import AppAxiosInstance from './auth/axios';
 import { asyncRequestIsComplete } from './utils/asyncRequest';
+import protectedApiClient from './api/protectedApiClient';
 
 export interface C4CState {
   authenticationState: UserAuthenticationReducerState;
@@ -62,6 +63,7 @@ const preloadedState: C4CState | undefined = loadStateFromLocalStorage();
 
 const thunkExtraArgs: ThunkExtraArgs = {
   authClient,
+  protectedApiClient,
 };
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -93,7 +95,7 @@ store.subscribe(
     } catch {
       // ignore write errors
     }
-  }, 10000),
+  }, 1000),
 );
 
 export default store;

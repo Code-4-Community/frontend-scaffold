@@ -3,13 +3,16 @@ import { AuthClient } from '../authClient';
 import { AsyncRequest } from '../../utils/asyncRequest';
 import { UserAuthenticationActions } from './actions';
 import { C4CState } from '../../store';
+import { ProtectedApiClient } from '../../api/protectedApiClient';
 
 export interface UserAuthenticationReducerState {
   readonly tokens: AsyncRequest<TokenPayload, any>;
+  readonly userData: AsyncRequest<UserData, string>;
 }
 
 export interface UserAuthenticationExtraArgs {
   readonly authClient: AuthClient;
+  readonly protectedApiClient: ProtectedApiClient;
 }
 
 export type UserAuthenticationThunkAction<R> = ThunkAction<
@@ -47,6 +50,12 @@ export interface TokenPayload {
 
 export interface RefreshTokenResponse {
   readonly freshAccessToken: string;
+}
+
+export interface UserData {
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
 export enum PrivilegeLevel {

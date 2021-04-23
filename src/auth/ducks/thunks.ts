@@ -1,12 +1,13 @@
 import { C4CState, LOCALSTORAGE_STATE_KEY } from '../../store';
 import { asyncRequestIsComplete } from '../../utils/asyncRequest';
 import AppAxiosInstance from '../axios';
-import { authenticateUser, logoutUser } from './actions';
+import { authenticateUser, logoutUser, userData } from './actions';
 import {
   LoginRequest,
   SignupRequest,
   TokenPayload,
   UserAuthenticationThunkAction,
+  UserData,
 } from './types';
 
 export const login = (
@@ -66,5 +67,19 @@ export const logout = (): UserAuthenticationThunkAction<void> => {
       dispatch(logoutUser.loaded());
       return Promise.resolve();
     }
+  };
+};
+
+export const getUserData = (): UserAuthenticationThunkAction<void> => {
+  return (dispatch, getState, { protectedApiClient }): Promise<void> => {
+    dispatch(userData.loading());
+    return protectedApiClient
+      .getUserData()
+      .then((response: UserData) => {
+        dispatch(userData.loaded(response));
+      })
+      .catch((error) => {
+        dispatch(userData.failed(error.response.data));
+      });
   };
 };

@@ -17,7 +17,9 @@ import { getPrivilegeLevel } from '../../auth/ducks/selectors';
 
 const { Title, Paragraph } = Typography;
 
-type LoginProps = UserAuthenticationReducerState;
+interface LoginProps {
+  readonly tokens: UserAuthenticationReducerState['tokens'];
+}
 
 const Login: React.FC<LoginProps> = ({ tokens }) => {
   const dispatch = useDispatch();
