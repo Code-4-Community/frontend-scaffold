@@ -64,8 +64,8 @@ const Onboarding: React.FC = () => {
   const [posts, setPosts] = useState<OnboardingResponseData[]>([]);
   const [formSuccess, setFormSuccess] = useState<boolean>(false);
 
-  const updatePosts = () => {
-    fetch('https://jsonplaceholder.typicode.com/posts', {
+  const updatePosts = async () => {
+    await fetch('https://jsonplaceholder.typicode.com/posts', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -76,9 +76,9 @@ const Onboarding: React.FC = () => {
       .then((json) => setPosts(json));
   };
 
-  const onFinish = (values: OnboardingRequestData) => {
+  const onFinish = async (values: OnboardingRequestData) => {
     setFormSuccess(false);
-    fetch('https://jsonplaceholder.typicode.com/posts', {
+    await fetch('https://jsonplaceholder.typicode.com/posts', {
       method: 'POST',
       body: JSON.stringify({favoriteColor: values.favoriteColor}),
       headers: {
