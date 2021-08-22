@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Form, Input, Typography } from 'antd';
 import styled from 'styled-components';
 import { ResponseCard } from '../../components/onboarding';
+import ProtectedApiClient from '../../api/protectedApiClient';
+import { OnboardingResponseData } from '../../api/protectedApiClient';
+import {
+  AsyncRequest,
+  AsyncRequestCompleted,
+  AsyncRequestFailed,
+  asyncRequestIsComplete,
+  AsyncRequestLoading,
+  AsyncRequestNotStarted,
+} from '../../utils/asyncRequest';
 
 const { Title, Paragraph } = Typography;
 
@@ -51,44 +61,37 @@ const SuccessMessage = styled(Paragraph)`
 
 interface OnboardingRequestData {
   favoriteColor: string;
-}
-
-interface OnboardingResponseData {
   id: number;
-  title: string;
-  body: string;
-  userId: number;
 }
 
 const Onboarding: React.FC = () => {
-  const [posts, setPosts] = useState<OnboardingResponseData[]>([]);
-  const [formSuccess, setFormSuccess] = useState<boolean>(false);
+  const [posts, setPosts] = useState<
+    AsyncRequest<OnboardingResponseData[], any>
+  >(AsyncRequestNotStarted());
+  const [post, setPost] = useState<AsyncRequest<OnboardingRequestData, any>>(
+    AsyncRequestNotStarted(),
+  );
 
-  const updatePosts = async () => {
-    await fetch('https://jsonplaceholder.typicode.com/posts', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => setPosts(json));
+  const getPosts = async () => {
+    setPosts(AsyncRequestLoading());
+    await ProtectedApiClient.getOnboardingData()
+      .then((res) => {
+        setPosts(AsyncRequestCompleted(res));
+      })
+      .catch((error) => {
+        setPosts(AsyncRequestFailed(error));
+      });
   };
 
   const onFinish = async (values: OnboardingRequestData) => {
-    setFormSuccess(false);
-    await fetch('https://jsonplaceholder.typicode.com/posts', {
-      method: 'POST',
-      body: JSON.stringify({ favoriteColor: values.favoriteColor }),
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => console.log(json));
-    setFormSuccess(true);
+    setPost(AsyncRequestLoading());
+    await ProtectedApiClient.postOnboardingForm(values)
+      .then((res) => {
+        setPost(AsyncRequestCompleted(res));
+      })
+      .catch((error) => {
+        setPost(AsyncRequestFailed(error));
+      });
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -123,21 +126,26 @@ const Onboarding: React.FC = () => {
               </Button>
             </Form.Item>
           </Form>
-          {formSuccess && <SuccessMessage>Success!</SuccessMessage>}
+          {asyncRequestIsComplete(post) && (
+            <SuccessMessage>
+              Success! Your favorite color is {post.result.favoriteColor}!
+            </SuccessMessage>
+          )}
         </FormCard>
-        <StyledButton onClick={updatePosts}>Get Posts</StyledButton>
+        <StyledButton onClick={getPosts}>Get Posts</StyledButton>
         <ResponseContainer>
-          {posts.map(function (object, i) {
-            return (
-              <ResponseCard
-                id={object.id}
-                key={i}
-                title={object.title}
-                body={object.body}
-                userId={object.userId}
-              />
-            );
-          })}
+          {asyncRequestIsComplete(posts) &&
+            posts.result.map(function (post, i) {
+              return (
+                <ResponseCard
+                  id={post.id}
+                  key={i}
+                  title={post.title}
+                  body={post.body}
+                  userId={post.userId}
+                />
+              );
+            })}
         </ResponseContainer>
       </Container>
     </>
