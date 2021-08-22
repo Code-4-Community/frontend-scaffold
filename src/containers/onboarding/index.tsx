@@ -49,6 +49,10 @@ const SuccessMessage = styled(Paragraph)`
   color: green;
 `;
 
+interface OnboardingRequestData {
+    favoriteColor: string
+}
+
 const Onboarding: React.FC = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const [formSuccess, setFormSuccess] = useState<boolean>(false);
@@ -65,11 +69,11 @@ const Onboarding: React.FC = () => {
       .then((json) => setPosts(json));
   };
 
-  const onFinish = (values: any) => {
+  const onFinish = (values: OnboardingRequestData) => {
     setFormSuccess(false);
     fetch('https://jsonplaceholder.typicode.com/posts', {
       method: 'POST',
-      body: JSON.stringify(values),
+      body: JSON.stringify({favoriteColor: values.favoriteColor}),
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
