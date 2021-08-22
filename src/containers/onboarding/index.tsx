@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import { Helmet } from 'react-helmet';
 import { Button, Card, Form, Input, Typography } from 'antd';
-import { ContentContainer } from '../../components';
 import styled from 'styled-components';
-import { values } from 'lodash';
 import { ResponseCard } from '../../components/onboarding';
 
 const { Title, Paragraph } = Typography;
