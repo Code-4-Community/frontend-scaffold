@@ -50,14 +50,14 @@ const SuccessMessage = styled(Paragraph)`
 `;
 
 interface OnboardingRequestData {
-    favoriteColor: string
+  favoriteColor: string;
 }
 
 interface OnboardingResponseData {
-    id: number;
-    title: string;
-    body: string;
-    userId: number;
+  id: number;
+  title: string;
+  body: string;
+  userId: number;
 }
 
 const Onboarding: React.FC = () => {
@@ -80,7 +80,7 @@ const Onboarding: React.FC = () => {
     setFormSuccess(false);
     await fetch('https://jsonplaceholder.typicode.com/posts', {
       method: 'POST',
-      body: JSON.stringify({favoriteColor: values.favoriteColor}),
+      body: JSON.stringify({ favoriteColor: values.favoriteColor }),
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
