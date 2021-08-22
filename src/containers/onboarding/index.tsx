@@ -53,8 +53,15 @@ interface OnboardingRequestData {
     favoriteColor: string
 }
 
+interface OnboardingResponseData {
+    id: number;
+    title: string;
+    body: string;
+    userId: number;
+}
+
 const Onboarding: React.FC = () => {
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<OnboardingResponseData[]>([]);
   const [formSuccess, setFormSuccess] = useState<boolean>(false);
 
   const updatePosts = () => {
