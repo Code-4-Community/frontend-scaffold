@@ -17,6 +17,7 @@ import { PrivilegeLevel } from './auth/ducks/types';
 import { C4CState } from './store';
 import { getPrivilegeLevel } from './auth/ducks/selectors';
 import { useSelector } from 'react-redux';
+import Onboarding from './containers/onboarding';
 
 const { Content } = Layout;
 
@@ -32,6 +33,7 @@ export enum Routes {
   FORGOT_PASSWORD_REQUEST = '/forgot-password',
   FORGOT_PASSWORD_RESET = '/forgot-password-reset/:key',
   VERIFY_EMAIL = '/verify/:key',
+  ONBOARDING = '/onboarding',
 }
 
 const App: React.FC = () => {
@@ -72,6 +74,11 @@ const App: React.FC = () => {
                           exact
                           component={VerifyEmail}
                         />
+                        <Route
+                          path={Routes.ONBOARDING}
+                          exact
+                          component={Onboarding}
+                        />
                         <Route path="*" exact component={NotFound} />
                       </Switch>
                     );
@@ -95,6 +102,11 @@ const App: React.FC = () => {
                           path={Routes.VERIFY_EMAIL}
                           exact
                           component={VerifyEmail}
+                        />
+                        <Route
+                          path={Routes.ONBOARDING}
+                          exact
+                          component={Onboarding}
                         />
                         <Route path="*" exact component={NotFound} />
                       </Switch>
