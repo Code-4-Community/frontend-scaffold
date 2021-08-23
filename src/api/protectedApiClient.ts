@@ -33,7 +33,6 @@ export interface GetResponseData {
 const postOnboardingForm = async (
   request: PostRequestData,
 ): Promise<PostRequestData> => {
-  console.log(request);
   const res = await AppAxiosInstance.post(
     'https://jsonplaceholder.typicode.com/posts',
     request,

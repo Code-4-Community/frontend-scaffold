@@ -92,7 +92,7 @@ const Onboarding: React.FC = () => {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
+    setGetPostsRequest(AsyncRequestFailed(errorInfo));
   };
 
   return (
@@ -103,9 +103,7 @@ const Onboarding: React.FC = () => {
         </OnboardingPageTitle>
         <FormCard bodyStyle={{ width: '100%' }}>
           <Title>Form!</Title>
-          <Paragraph>
-            This is an example form card to create a getPostsRequest.
-          </Paragraph>
+          <Paragraph>This is an example form card to create a post.</Paragraph>
           <Form onFinish={onFinish} onFinishFailed={onFinishFailed}>
             <Form.Item
               label="User ID"
@@ -160,14 +158,14 @@ const Onboarding: React.FC = () => {
         <StyledButton onClick={getPosts}>Get Posts</StyledButton>
         <ResponseContainer>
           {asyncRequestIsComplete(createPostRequest) &&
-            createPostRequest.result.map(function (getPostsRequest, i) {
+            createPostRequest.result.map((post: GetResponseData, i: number) => {
               return (
                 <ResponseCard
-                  id={getPostsRequest.id}
+                  id={post.id}
                   key={i}
-                  title={getPostsRequest.title}
-                  body={getPostsRequest.body}
-                  userId={getPostsRequest.userId}
+                  title={post.title}
+                  body={post.body}
+                  userId={post.userId}
                 />
               );
             })}

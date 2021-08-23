@@ -6,7 +6,9 @@ import {
   AsyncRequest,
   AsyncRequestCompleted,
   AsyncRequestFailed,
-  asyncRequestIsComplete, asyncRequestIsFailed, asyncRequestIsLoading,
+  asyncRequestIsComplete,
+  asyncRequestIsFailed,
+  asyncRequestIsLoading,
   asyncRequestIsNotStarted,
   AsyncRequestLoading,
   AsyncRequestNotStarted,
@@ -183,7 +185,6 @@ describe('asyncRequest ', () => {
       );
     });
 
-
     it('asyncRequestIsFailed identifies Failed asyncRequests', () => {
       asyncRequests.map(
         (asyncRequest: AsyncRequest<string, string>, index: number) => {
@@ -195,6 +196,5 @@ describe('asyncRequest ', () => {
         },
       );
     });
-
   });
 });
