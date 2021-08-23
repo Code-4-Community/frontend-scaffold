@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Form, Input, Typography } from 'antd';
 import styled from 'styled-components';
 import { ResponseCard } from '../../components/onboarding';
-import ProtectedApiClient from '../../api/protectedApiClient';
-import { OnboardingResponseData } from '../../api/protectedApiClient';
+import ProtectedApiClient, {
+  GetResponseData,
+  PostRequestData,
+} from '../../api/protectedApiClient';
 import {
   AsyncRequest,
   AsyncRequestCompleted,
@@ -59,38 +61,33 @@ const SuccessMessage = styled(Paragraph)`
   color: green;
 `;
 
-interface OnboardingRequestData {
-  favoriteColor: string;
-  id: number;
-}
-
 const Onboarding: React.FC = () => {
-  const [posts, setPosts] = useState<
-    AsyncRequest<OnboardingResponseData[], any>
+  const [createPostRequest, setCreatePostRequest] = useState<
+    AsyncRequest<GetResponseData[], any>
   >(AsyncRequestNotStarted());
-  const [post, setPost] = useState<AsyncRequest<OnboardingRequestData, any>>(
-    AsyncRequestNotStarted(),
-  );
+  const [getPostsRequest, setGetPostsRequest] = useState<
+    AsyncRequest<PostRequestData, any>
+  >(AsyncRequestNotStarted());
 
   const getPosts = async () => {
-    setPosts(AsyncRequestLoading());
+    setCreatePostRequest(AsyncRequestLoading());
     await ProtectedApiClient.getOnboardingData()
       .then((res) => {
-        setPosts(AsyncRequestCompleted(res));
+        setCreatePostRequest(AsyncRequestCompleted(res));
       })
       .catch((error) => {
-        setPosts(AsyncRequestFailed(error));
+        setCreatePostRequest(AsyncRequestFailed(error));
       });
   };
 
-  const onFinish = async (values: OnboardingRequestData) => {
-    setPost(AsyncRequestLoading());
+  const onFinish = async (values: PostRequestData) => {
+    setGetPostsRequest(AsyncRequestLoading());
     await ProtectedApiClient.postOnboardingForm(values)
       .then((res) => {
-        setPost(AsyncRequestCompleted(res));
+        setGetPostsRequest(AsyncRequestCompleted(res));
       })
       .catch((error) => {
-        setPost(AsyncRequestFailed(error));
+        setGetPostsRequest(AsyncRequestFailed(error));
       });
   };
 
@@ -106,15 +103,42 @@ const Onboarding: React.FC = () => {
         </OnboardingPageTitle>
         <FormCard bodyStyle={{ width: '100%' }}>
           <Title>Form!</Title>
-          <Paragraph>This is an example form card.</Paragraph>
+          <Paragraph>
+            This is an example form card to create a getPostsRequest.
+          </Paragraph>
           <Form onFinish={onFinish} onFinishFailed={onFinishFailed}>
             <Form.Item
-              label="Favorite color"
-              name="favoriteColor"
+              label="User ID"
+              name="userId"
               rules={[
                 {
                   required: true,
-                  message: 'Just tell me your favorite color :)',
+                  message: 'Please input your user ID.',
+                },
+              ]}
+            >
+              <FormInput />
+            </Form.Item>
+            <Form.Item
+              label="Body"
+              name="body"
+              rules={[
+                {
+                  required: true,
+                  message:
+                    'Please input the body text of your getPostsRequest.',
+                },
+              ]}
+            >
+              <FormInput />
+            </Form.Item>
+            <Form.Item
+              label="Title"
+              name="title"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input the title of your getPostsRequest.',
                 },
               ]}
             >
@@ -126,23 +150,24 @@ const Onboarding: React.FC = () => {
               </Button>
             </Form.Item>
           </Form>
-          {asyncRequestIsComplete(post) && (
+          {asyncRequestIsComplete(getPostsRequest) && (
             <SuccessMessage>
-              Success! Your favorite color is {post.result.favoriteColor}!
+              Successfully created getPostsRequest with title '
+              {getPostsRequest.result.title}'!
             </SuccessMessage>
           )}
         </FormCard>
         <StyledButton onClick={getPosts}>Get Posts</StyledButton>
         <ResponseContainer>
-          {asyncRequestIsComplete(posts) &&
-            posts.result.map(function (post, i) {
+          {asyncRequestIsComplete(createPostRequest) &&
+            createPostRequest.result.map(function (getPostsRequest, i) {
               return (
                 <ResponseCard
-                  id={post.id}
+                  id={getPostsRequest.id}
                   key={i}
-                  title={post.title}
-                  body={post.body}
-                  userId={post.userId}
+                  title={getPostsRequest.title}
+                  body={getPostsRequest.body}
+                  userId={getPostsRequest.userId}
                 />
               );
             })}

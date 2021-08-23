@@ -7,9 +7,9 @@ export interface ProtectedApiClient {
   }) => Promise<void>;
   readonly deleteUser: (request: { password: string }) => Promise<void>;
   readonly postOnboardingForm: (
-    request: OnboardingRequestData,
-  ) => Promise<OnboardingRequestData>;
-  readonly getOnboardingData: () => Promise<OnboardingResponseData[]>;
+    request: PostRequestData,
+  ) => Promise<PostRequestData>;
+  readonly getOnboardingData: () => Promise<GetResponseData[]>;
 }
 
 export enum ProtectedApiClientRoutes {
@@ -17,33 +17,36 @@ export enum ProtectedApiClientRoutes {
   DELETE_USER = '/api/v1/protected/user/',
 }
 
-export interface OnboardingRequestData {
-  favoriteColor: string;
-  id: number;
+export interface PostRequestData {
+  title: string;
+  body: string;
+  userId: number;
 }
 
-export interface OnboardingResponseData {
+export interface GetResponseData {
   id: number;
   title: string;
   body: string;
   userId: number;
 }
 
-const postOnboardingForm = (
-  request: OnboardingRequestData,
-): Promise<OnboardingRequestData> => {
-  return AppAxiosInstance.post(
+const postOnboardingForm = async (
+  request: PostRequestData,
+): Promise<PostRequestData> => {
+  console.log(request);
+  const res = await AppAxiosInstance.post(
     'https://jsonplaceholder.typicode.com/posts',
     request,
-  )
-    .then((r) => r.data)
-    .catch((e) => e);
+    { headers: { 'Access-Control-Allow-Origin': '*' } },
+  );
+  return res.data;
 };
 
-const getOnboardingData = (): Promise<OnboardingResponseData[]> => {
-  return AppAxiosInstance.get('https://jsonplaceholder.typicode.com/posts')
-    .then((r) => r.data)
-    .catch((e) => e);
+const getOnboardingData = async (): Promise<GetResponseData[]> => {
+  const res = await AppAxiosInstance.get(
+    'https://jsonplaceholder.typicode.com/posts',
+  );
+  return res.data;
 };
 
 const changePassword = (request: {
